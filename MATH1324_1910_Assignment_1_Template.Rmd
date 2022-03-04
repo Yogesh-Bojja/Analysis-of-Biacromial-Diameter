@@ -1,0 +1,88 @@
+---
+title: "MATH1324 Assignment 1"
+subtitle: Modeling Body Measurements
+output:
+  html_notebook: default
+  pdf_document: default
+---
+
+## Student Details
+
+
+Yogesh Haresh Bojja (s3789918)
+
+
+## Problem Statement
+Aim of this assignment is to visualize empirical data and normal distribution of BIACROMIAL DIAMETER from - "Heinz G, Peterson LJ, Johnson RW, Kerk CJ. 2003. Exploring Relationships in Body Dimensions. Journal of Statistics Education 11(2)" based on gender and determine whether the normal distribution fits the empirical data of the selected attribute.
+
+## Load Packages
+
+```{r}
+# This is a chunk where you can load the necessary packages required to reproduce the report
+library(dplyr)
+library(utils)
+```
+
+## Data
+
+```{r}
+# This is a chunk for your Data section. 
+df <- read.csv('bdims.csv')
+df$sex <- factor(df$sex, levels = c(0,1), labels = c('Female', 'Male'))
+t <- table(df$sex)
+print(t)
+male_df = df %>% filter(df$sex=='Male')
+female_df = filter(df, df$sex=='Female')
+#Selecting biacromial diameter for investigation
+male_df = male_df$bia.di
+female_df = female_df$bia.di
+```
+## Summary Statistics
+
+```{r}
+# This is a chunk for your Summary Statistics section. 
+a <- summary(female_df)
+print(paste('Minimum(Female) : ',a['Min.']))
+print(paste('Maximum(Female) : ',a['Max.']))
+print(paste('1st Quartile(Female) : ',a['1st Qu.']))
+print(paste('3rd Quartile(Female) : ',a['3rd Qu.']))
+print(paste('Mean(Female) : ',round(a['Mean'], 2)))
+print(paste('Median(Female) : ',a['Median']))
+print(paste('InterQuartile Range(Female) : ',round(IQR(female_df), 2)))
+print(paste('Standard deviation(Female) : ',round(sd(female_df), 2)))
+print(paste('Variance(Female) : ',round(var(female_df), 2)))
+a <- summary(male_df)
+print(paste('Minimum(Male) : ',a['Min.']))
+print(paste('Maximum(Male) : ',a['Max.']))
+print(paste('1st Quartile(Male) : ',a['1st Qu.']))
+print(paste('3rd Quartile(Male) : ',a['3rd Qu.']))
+print(paste('Mean(Male) : ',round(a['Mean'], 2)))
+print(paste('Median(Male) : ',a['Median']))
+print(paste('InterQuartile Range(Male) : ',round(IQR(male_df), 2)))
+print(paste('Standard deviation(Male) : ',round(sd(male_df), 2)))
+print(paste('Variance(Male) : ',round(var(male_df), 2)))
+```
+## Distribution Fitting
+
+```{r}
+# This is a chunk for your Distribution Fitting section. 
+hist(male_df, col = 'yellow', xlab = 'Biacromial diamter of male', main = 'Distribution of biacromial diameter of males', probability = TRUE, breaks = 15 )
+x <- seq(from = min(male_df), to = max(male_df), length.out = 500)
+y <- dnorm(x, mean = mean(male_df), sd = sd(male_df))
+lines(x, y, col="red", lwd=3)
+legend("topright", c("Normal Distribution"), fill=c("red"))
+
+hist(female_df, col = 'orange', xlab = 'Biacromial diamter of female', main = 'Distribution of biacromial diameter of females', probability = TRUE, breaks = 15)
+x <- seq(from = min(female_df), to = max(female_df), length.out = 500)
+y <- dnorm(x, mean = mean(female_df), sd = sd(female_df))
+lines(x, y, col="blue", lwd=3)
+legend("topright", c("Normal Distribution"), fill=c("blue"))
+
+```
+
+## Interpretation
+Interpretation of males biacromial diameter - Referring to the respective figure we can observe that density of the mean value of empirical data is more than that of the density of normal distributions. Mean of the normal distribution and empirical data is observed to be the same. Normal distributions curve covers almost all the portion of empirical data.  
+
+Interpretation of females biacromial diameter - Referring to the respective figure we can observe that density of the mean value of empirical data is less than that of the density of normal distributions. Mean of the normal distribution and empirical data is observed to be the same. Normal distributions curve covers the majority of the portion of empirical data. Empirical data seems to have two peaks but still the curve covers mostly all the empirical data.
+
+Finally after the investigation it can be concluded that both the normal distribution curves fit the empirical data well.
